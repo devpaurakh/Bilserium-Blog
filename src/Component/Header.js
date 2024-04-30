@@ -4,7 +4,7 @@ import LogoWhite from "/Users/ace/Documents/Code/bisleriumblog/src/Assets/Images
 
 export default function Header() {
   return (
-    <header className="bg-primaryColors sticky top-0 z-[20] mx-auto flex w-full items-center justify-between border-b p-3">
+    <header className="bg-primaryColors   fixed top-0 mx-auto flex w-full items-center justify-between border-b p-2 ">
       <img src={LogoWhite} alt="logo" className="w-23 h-24" />
 
       <div className="w-2/5">
