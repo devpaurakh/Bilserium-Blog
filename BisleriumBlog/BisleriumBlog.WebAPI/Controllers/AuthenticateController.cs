@@ -1,7 +1,6 @@
 ﻿using BisleriumBlog.Application.Common.Interface;
 using BisleriumBlog.Application.DTOs;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BisleriumBlog.WebAPI.Controllers
@@ -25,31 +24,51 @@ namespace BisleriumBlog.WebAPI.Controllers
             return result;
         }
 
-        [HttpGet]
-        [Route("/api/authenticate/getUserDetails")]
-        public async Task<IEnumerable<UserDetailsDTO>> GetUserDetails()
-        {
-            var result = await _authenticationManager.GetUserDetails();
-            return result;
-        }
-
         [HttpPost]
         [AllowAnonymous]
         [Route("/api/authenticate/login")]
-        public async Task<ResponseDTO> Login([FromBody] UserLoginRequestDTO user)
+        public async Task<LoginResponseDTO> Login([FromBody] UserLoginRequestDTO user)
         {
             var result = await _authenticationManager.Login(user);
             return result;
         }
+
 
         [HttpPatch]
         [AllowAnonymous]
         [Route("/api/forgotPassword")]
         public async Task<ResponseDTO> ForgotPassword([FromQuery] string email, string password)
         {
-            var ressult = await _authenticationManager.ForgotPassword(email, password);
-            return ressult;
+            var result = await _authenticationManager.ForgotPassword(email, password);
+            return result;
 
+        }
+
+
+        [HttpGet]
+        [Route("/api/user/profile")]
+        public async Task<UserDetailsDTO> GetUserProfile()
+        {
+            var result = await _authenticationManager.GetUserProfile();
+            return result;
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("/api/update/profile")]
+        public async Task<ActionResult<UserDetailsDTO>> UpdateProfile()
+        {
+            var result = await _authenticationManager.UpdateProfile();
+            return result;
+        }
+
+
+        [HttpGet]
+        [Route("/api/authenticate/getUserDetails")]
+        public async Task<IEnumerable<UserDetailsDTO>> GetUserDetails()
+        {
+            var result = await _authenticationManager.GetUserDetails();
+            return result;
         }
     }
 }
