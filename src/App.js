@@ -1,12 +1,10 @@
 import "./App.css";
-// import Login from "./Component/Login";
-import SignUp from "./Component/Signup";
-// import Sidebar from "./Component/Sizebar";
+import Header from "./Component/Header";
 
 function App() {
   return (
     <div>
-      <SignUp/>
+     <Header/>
     </div>
   )
    

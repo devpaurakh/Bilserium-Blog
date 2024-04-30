@@ -58,8 +58,7 @@ export default function Login() {
             <div>
               <label
                 for="password"
-                className="block text-sm font-medium text-gray-700"
-              >
+                className="block text-sm font-medium text-gray-700">
                 Password
               </label>
               <div className="relative">
