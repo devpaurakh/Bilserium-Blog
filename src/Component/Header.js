@@ -1,9 +1,32 @@
-import React from 'react'
+import React from "react";
+
+import LogoWhite from "/Users/ace/Documents/Code/bisleriumblog/src/Assets/Images/logo.png";
 
 export default function Header() {
   return (
-    <header className='bg-dark-background sticky top-0 z-[20] mx-auto flex w-full items-center justify-between border-b border-gray-500 p-8'>
-        <h1>Header</h1>
+    <header className="bg-primaryColors sticky top-0 z-[20] mx-auto flex w-full items-center justify-between border-b p-3">
+      <img src={LogoWhite} alt="logo" className="w-23 h-24" />
+
+      <div className="w-2/5">
+        <input
+          type="text"
+          placeholder="Search"
+          className="w-full px-4 py-2 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue"
+        />
+      </div>
+
+      {/* Create+ button */}
+      <div className="flex items-center">
+        <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 ">
+          Create +
+        </button>
+        <img
+          src="https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=Paurakh+Saud&rounded=true"
+          alt=""
+          className="ml-10 w-12"
+        />{" "}
+        {/* Add margin to the left */}
+      </div>
     </header>
-  )
+  );
 }
