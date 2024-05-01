@@ -1,4 +1,4 @@
-﻿using BisleriumBlog.Application.DTOs;
+﻿using BisleriumBlog.Application.DTOs.UserDTOs;
 
 namespace BisleriumBlog.Application.Common.Interface
 {
@@ -7,8 +7,8 @@ namespace BisleriumBlog.Application.Common.Interface
         Task<ResponseDTO> Register(UserRegisterRequestDto model);
         Task<LoginResponseDTO> Login(UserLoginRequestDTO model);
         Task<ResponseDTO> ForgotPassword(string email, string password);
-        Task<UserDetailsDTO> GetUserProfile();
-        Task<UserDetailsDTO> UpdateProfile();
+        Task<UserDetailsRespons> GetUserProfile(string userId);
+        Task<UserDetailsRespons> UpdateProfile(UserDetailsDTO model);
         Task<IEnumerable<UserDetailsDTO>> GetUserDetails();
     }
 }

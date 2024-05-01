@@ -17,6 +17,7 @@ namespace BisleriumBlog.Infrastructure.Data
             _dateTime = dateTime;
         }
 
+        //  add the entity
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<User> Users { get; set; }
 
@@ -46,13 +47,12 @@ namespace BisleriumBlog.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             var ADMIN_ID = "02174cf0–9412–4cfe-afbf-59f706d72cf6";
-            var ROLE_ID = "341743f0-asd2–42de-afbf-59kmkkmk72cf6";
+            var ROLE_ID = "SuperAdmin";
 
             // seed admin role
             builder.Entity<IdentityRole>().HasData(new IdentityRole
             {
                 Name = "SuperAdmin",
-                NormalizedName = "SUPERADMIN",
                 Id = ROLE_ID,
                 ConcurrencyStamp = ROLE_ID
             });
@@ -63,7 +63,7 @@ namespace BisleriumBlog.Infrastructure.Data
                 Id = ADMIN_ID,
                 Email = "admin@gmail.com",
                 EmailConfirmed = true,
-                UserName = "ADMIN",
+                UserName = "admin",
             };
 
             //set user password

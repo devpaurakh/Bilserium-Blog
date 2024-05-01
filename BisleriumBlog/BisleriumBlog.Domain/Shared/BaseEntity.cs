@@ -14,6 +14,6 @@ namespace BisleriumBlog.Domain.Shared
         public Guid? CreatedBy { get; set; }
         public Guid? ModifiedBy { get; set; }
         public Guid? DeletedBy { get; set; }
-        public bool IsDeleted { get; set; }
+        public bool IsDeleted { get; set; } = false;
     }
 }

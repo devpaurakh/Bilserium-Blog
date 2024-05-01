@@ -1,5 +1,7 @@
 ﻿using BisleriumBlog.Application.Common.Interface;
 using BisleriumBlog.Application.DTOs;
+using BisleriumBlog.Application.DTOs.UserDTOs;
+using BisleriumBlog.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,35 +35,32 @@ namespace BisleriumBlog.WebAPI.Controllers
             return result;
         }
 
-
         [HttpPatch]
         [AllowAnonymous]
-        [Route("/api/forgotPassword")]
-        public async Task<ResponseDTO> ForgotPassword([FromQuery] string email, string password)
+        [Route("/api/forgotpassword")]
+        public async Task<ResponseDTO> ForgotPassword(string email, string password)
         {
             var result = await _authenticationManager.ForgotPassword(email, password);
             return result;
 
         }
 
-
         [HttpGet]
         [Route("/api/user/profile")]
-        public async Task<UserDetailsDTO> GetUserProfile()
+        public async Task<ActionResult<UserDetailsRespons>> GetUserProfile([FromQuery] string userId)
         {
-            var result = await _authenticationManager.GetUserProfile();
+            var result = await _authenticationManager.GetUserProfile(userId);
             return result;
         }
 
-        [Authorize]
-        [HttpGet]
+        // [Authorize]
+        [HttpPatch]
         [Route("/api/update/profile")]
-        public async Task<ActionResult<UserDetailsDTO>> UpdateProfile()
+        public async Task<ActionResult<UserDetailsRespons>> UpdateProfile(UserDetailsDTO model)
         {
-            var result = await _authenticationManager.UpdateProfile();
+            var result = await _authenticationManager.UpdateProfile(model);
             return result;
         }
-
 
         [HttpGet]
         [Route("/api/authenticate/getUserDetails")]

@@ -2,14 +2,16 @@
 using System.Security.Claims;
 using System.Text;
 using BisleriumBlog.Application.Common.Interface;
-using BisleriumBlog.Application.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Data;
 using BisleriumBlog.Domain.Entities;
+using BisleriumBlog.Application.DTOs.UserDTOs;
+
 
 namespace BisleriumBlog.Infrastructure.Services
 {
@@ -45,7 +47,7 @@ namespace BisleriumBlog.Infrastructure.Services
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
                 return new ResponseDTO
-                    { Status = false, Message = "Enter the valid password. Please check user details and try again." };
+                    { Status = false, Message = "Enter the valid username password. Please check user details and try again." };
 
             // Assigning a role to the user
             if (!await _roleManager.RoleExistsAsync("Blogger"))
@@ -77,11 +79,12 @@ namespace BisleriumBlog.Infrastructure.Services
 
             return new LoginResponseDTO()
             {
-                Message = "User login failed! Please check user details and try again.!",
+                Message = "User login failed! Please check user details and try again!",
                 Status = false
             };
         }
 
+        // Generate the JWT token
         public async Task<string> CreateJwtAccessToken(User user)
         {
             var signingCredentials = GetSigningCredentials();
@@ -91,6 +94,7 @@ namespace BisleriumBlog.Infrastructure.Services
             return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
         }
 
+        // Get Signing Credentials
         private SigningCredentials GetSigningCredentials()
         {
             var jwtConfig = _configuration.GetSection("jwtConfig");
@@ -98,6 +102,7 @@ namespace BisleriumBlog.Infrastructure.Services
             return new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
         }
 
+        // Claim the JWT token with user details
         private async Task<List<Claim>> GetClaims(User user)
         {
             var claims = new List<Claim>
@@ -116,55 +121,52 @@ namespace BisleriumBlog.Infrastructure.Services
             return claims;
         }
 
+        // JWT token create
         private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)
         {
             var jwtSettings = _configuration.GetSection("jwtConfig");
             var tokenOptions = new JwtSecurityToken
             (
-            issuer: jwtSettings["issuer"],
-            audience: jwtSettings["audience"],
-            claims: claims,
-            expires: DateTime.Now.AddHours(Convert.ToDouble(jwtSettings["expiresIn"])),
-            signingCredentials: signingCredentials
+                issuer: jwtSettings["issuer"],
+                audience: jwtSettings["audience"],
+                claims: claims,
+                expires: DateTime.Now.AddHours(Convert.ToDouble(jwtSettings["expiresIn"])),
+                signingCredentials: signingCredentials
             );
 
             return tokenOptions;
         }
 
-
-
+        // Get all user details
         [Authorize]
         public async Task<IEnumerable<UserDetailsDTO>> GetUserDetails()
         {
             var users = await _userManager.Users.Select(x => new
             {
+                x.Id,
                 x.Email,
                 x.UserName,
-                x.EmailConfirmed
+                x.PhoneNumber,
             }).ToListAsync();
 
-            // either
-            var userDetails = from userData in users
-                              select new UserDetailsDTO()
-                              {
-                                  Email = userData.Email,
-                                  UserName = userData.UserName,
-                                  IsEmailConfirmed = userData.EmailConfirmed
-                              };
+            var userDetails = new List<UserDetailsDTO>();
 
-            // OR
-            var userDatas = new List<UserDetailsDTO>();
-            foreach (var item in users)
+            foreach (var userData in users)
             {
-                userDatas.Add(new UserDetailsDTO()
+                var user = await _userManager.FindByIdAsync(userData.Id);
+                var roles = await _userManager.GetRolesAsync(user);
+
+                userDetails.Add(new UserDetailsDTO()
                 {
-                    Email = item.Email,
-                    UserName = item.UserName,
-                    IsEmailConfirmed = item.EmailConfirmed
+                    Id = userData.Id,
+                    Email = userData.Email,
+                    Username = userData.UserName,
+                    PhoneNumber = userData.PhoneNumber,
+                    Role = roles.FirstOrDefault()
                 });
             }
 
-            return userDetails; // userDatas;
+            return userDetails;
         }
 
 
@@ -178,36 +180,84 @@ namespace BisleriumBlog.Infrastructure.Services
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
             if (!result.Succeeded)
-                return new ResponseDTO { Status = false, Message = "Failed to reset password!" };
+                return new ResponseDTO { Status = false, Message = "Invalid your password!" };
 
             return new ResponseDTO { Status = true, Message = "Password reset successfully!" };
         }
 
         // Get Profile details
-        public async Task<UserDetailsDTO> GetUserProfile()
+        public async Task<UserDetailsRespons> GetUserProfile(string userId)
         {
-            var userId = Guid.NewGuid().ToString();
 
             var user = await _userManager.FindByIdAsync(userId);
 
             if (user == null)
             {
-                return null;
+                return new UserDetailsRespons
+                {
+                    Status = false,
+                    Message = "Invalid user profile!",
+                };
             }
+
+            var roles = await _userManager.GetRolesAsync(user);
 
             var userDetails = new UserDetailsDTO()
             {
+                Id = userId,
                 Email = user.Email,
-                UserName = user.UserName,
-                IsEmailConfirmed = user.EmailConfirmed
+                Username = user.UserName,
+                PhoneNumber = user.PhoneNumber,
+                Role = roles.FirstOrDefault()
             };
 
-            return userDetails;
+             return new UserDetailsRespons
+            {
+                Status = true,
+                Message = "User profile",
+                UserDetails = userDetails
+            };
         }
 
-        public Task<UserDetailsDTO> UpdateProfile()
+        // Update user profile details 
+        public async Task<UserDetailsRespons> UpdateProfile(UserDetailsDTO model)
         {
-            throw new NotImplementedException();
+            var user = await _userManager.FindByIdAsync(model.Id);
+            if (user == null)
+                return new UserDetailsRespons { Status = false, Message = "User not found!" };
+
+            user.Email = model.Email;
+            user.UserName = model.Username;
+            user.PhoneNumber = model.PhoneNumber;
+
+            var result = await _userManager.UpdateAsync(user);
+
+            var userDetails = new UserDetailsDTO
+            {
+                Id = user.Id,
+                Email = user.Email,
+                Username = user.UserName,
+                PhoneNumber = user.PhoneNumber,
+                Role = model.Role
+            };
+
+            if (result.Succeeded)
+            {
+                return new UserDetailsRespons
+                {
+                    Status = true,
+                    Message = "Profile updated successfully!",
+                    UserDetails = userDetails
+                };
+            }
+            else
+            {
+                return new UserDetailsRespons
+                {
+                    Status = false,
+                    Message = "Failed to update profile!",
+                };
+            }
         }
     }
 }
