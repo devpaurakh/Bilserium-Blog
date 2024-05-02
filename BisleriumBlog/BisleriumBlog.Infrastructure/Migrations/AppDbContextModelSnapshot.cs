@@ -47,7 +47,6 @@ namespace BisleriumBlog.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ImageUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
@@ -59,22 +58,71 @@ namespace BisleriumBlog.Infrastructure.Migrations
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("PopularBlog")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("VoteConut")
-                        .HasColumnType("int");
 
                     b.HasKey("BlogId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Blogs");
+                });
+
+            modelBuilder.Entity("BisleriumBlog.Domain.Entities.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("BlogId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Comments")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModifiedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("ModifiedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("PopularComments")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BlogId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comment");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -106,10 +154,9 @@ namespace BisleriumBlog.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "341743f0-asd2–42de-afbf-59kmkkmk72cf6",
-                            ConcurrencyStamp = "341743f0-asd2–42de-afbf-59kmkkmk72cf6",
-                            Name = "SuperAdmin",
-                            NormalizedName = "SUPERADMIN"
+                            Id = "SuperAdmin",
+                            ConcurrencyStamp = "SuperAdmin",
+                            Name = "SuperAdmin"
                         });
                 });
 
@@ -277,7 +324,7 @@ namespace BisleriumBlog.Infrastructure.Migrations
                         new
                         {
                             UserId = "02174cf0–9412–4cfe-afbf-59f706d72cf6",
-                            RoleId = "341743f0-asd2–42de-afbf-59kmkkmk72cf6"
+                            RoleId = "SuperAdmin"
                         });
                 });
 
@@ -311,15 +358,15 @@ namespace BisleriumBlog.Infrastructure.Migrations
                         {
                             Id = "02174cf0–9412–4cfe-afbf-59f706d72cf6",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d6836e0e-a9ba-48a9-93e4-43bf7a452463",
+                            ConcurrencyStamp = "d1a0df9d-7506-4704-a58b-fe0987c05da7",
                             Email = "admin@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAEOwL+0fEeN1A1usBw4uKcjBwxgw0fhBRgV6q9mXj4Ad6oQcjXH686ysynMIN7ep8iA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELxXWUj158JYP1TUF1k2pWgnWghvfUCMMk0Z80IMOvf/FRibjgh3aDA6FvcQn41M+Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "991ae8a1-dc59-4ef0-8f6d-2965bb89fc94",
+                            SecurityStamp = "ee2d297f-a0f4-4553-985b-ed730a2409e2",
                             TwoFactorEnabled = false,
-                            UserName = "ADMIN"
+                            UserName = "admin"
                         });
                 });
 
@@ -327,9 +374,22 @@ namespace BisleriumBlog.Infrastructure.Migrations
                 {
                     b.HasOne("BisleriumBlog.Domain.Entities.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BisleriumBlog.Domain.Entities.Comment", b =>
+                {
+                    b.HasOne("BisleriumBlog.Domain.Entities.Blog", "Blog")
+                        .WithMany()
+                        .HasForeignKey("BlogId");
+
+                    b.HasOne("BisleriumBlog.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Blog");
 
                     b.Navigation("User");
                 });
