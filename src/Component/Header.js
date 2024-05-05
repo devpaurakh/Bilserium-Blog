@@ -1,9 +1,11 @@
 import React from "react";
 
 import LogoWhite from "/Users/ace/Documents/Code/bisleriumblog/src/Assets/Images/logo.png";
+import { BrowserRouter } from "react-router-dom";
 
 export default function Header() {
   return (
+    
     <header className="bg-primaryColors   fixed top-0 mx-auto flex w-full items-center justify-between border-b p-2 ">
       <img src={LogoWhite} alt="logo" className="w-23 h-24" />
 

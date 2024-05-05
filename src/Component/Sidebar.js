@@ -5,9 +5,11 @@ import { faHome } from "@fortawesome/free-solid-svg-icons/faHome";
 import { faSignOut } from "@fortawesome/free-solid-svg-icons/faSignOut";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
+import { BrowserRouter } from "react-router-dom";
 
 export default function Sidebar() {
   return (
+
     <div className=" fixed flex left-0 flex-col h-80 bg-primaryColors text-black w-64 rounded-md  mt-40 ">
       <div className="p-4">
         <ul>
@@ -47,5 +49,6 @@ export default function Sidebar() {
         </button>
       </div>
     </div>
+    
   );
 }

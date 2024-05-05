@@ -3,6 +3,7 @@ import logo from "/Users/ace/Documents/Code/bisleriumblog/src/Assets/Images/logo
 import illustration from "/Users/ace/Documents/Code/bisleriumblog/src/Assets/Images/illustration.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { BrowserRouter} from "react-router-dom";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -10,7 +11,8 @@ export default function Login() {
     setShowPassword(!showPassword);
   };
   return (
-    <div className="flex h-screen">
+
+   <div className="flex h-screen">
       {/* <!-- Left Pane --> */}
       <div class="hidden lg:flex items-center justify-center flex-1 bg-primaryColors text-black">
         <div class="max-w-md text-center">
@@ -98,5 +100,6 @@ export default function Login() {
         </div>
       </div>
     </div>
+  
   );
 }

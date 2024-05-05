@@ -1,19 +1,16 @@
 import "./App.css";
 import Header from "./Component/Header";
-import Post from "./Component/Post";
 import Sidebar from "./Component/Sidebar";
+import Homepage from "./Component/Homepage/Homepage";
+
 
 function App() {
   return (
-    <div >
+    <div>
       <Header />
-      <Sidebar/>
-      <div className="pt-40">
-        <Post />
-        <Post />
-        <Post />
-        <Post />
-        {/* Add more Post components here */}
+      <Sidebar />
+      <div>
+       <Homepage/>
       </div>
     </div>
   );
