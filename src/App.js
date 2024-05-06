@@ -1,19 +1,10 @@
 import "./App.css";
-import Header from "./Component/Header";
-import Sidebar from "./Component/Sidebar";
-import Homepage from "./Component/Homepage/Homepage";
-
+import Homepage from "./page/Homepage/Homepage";
 
 function App() {
-  return (
-    <div>
-      <Header />
-      <Sidebar />
-      <div>
-       <Homepage/>
-      </div>
-    </div>
-  );
+  return <div>
+    <Homepage/>
+  </div>;
 }
 
 export default App;

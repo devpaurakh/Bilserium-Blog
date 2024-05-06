@@ -1,7 +1,7 @@
 import React from "react";
 
 import LogoWhite from "/Users/ace/Documents/Code/bisleriumblog/src/Assets/Images/logo.png";
-import { BrowserRouter } from "react-router-dom";
+
 
 export default function Header() {
   return (
@@ -22,11 +22,15 @@ export default function Header() {
         <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 ">
           Create +
         </button>
-        <img
+
+        <button className="px-4 ml-10 py-2 bg-transprant text-black rounded-md hover:bg-blue-600 hover:text-white ">
+          <a href="">SignUp/Login</a>
+        </button>
+        {/* <img
           src="https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=Paurakh+Saud&rounded=true"
           alt=""
           className="ml-10 w-12"
-        />{" "}
+        /> */}
         {/* Add margin to the left */}
       </div>
     </header>
