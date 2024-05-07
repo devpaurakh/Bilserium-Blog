@@ -1,10 +1,32 @@
 import "./App.css";
 import Homepage from "./page/Homepage/Homepage";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import PopularPage from "./page/PopularPage/PopularPage";
+import AllPage from "./page/All/AllPage";
+import Login from "./page/Login";
+import Signup from "./page/Signup";
+import NoInternetPage from "./page/NoInternetPage";
+import CreatePost from "./page/CreatePost";
+import ProfilePage from "./page/ProfilePage";
 
 function App() {
-  return <div>
-    <Homepage/>
-  </div>;
+  return (
+    <div>
+      <BrowserRouter>
+        <Routes>
+          <Route index element={<Homepage />} />
+          <Route path="/home" element={<Homepage />} />
+          <Route path="/popular" element={<PopularPage />} />
+          <Route path="/all" element={<AllPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/create" element={<CreatePost />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="*" element={<NoInternetPage />} />
+        </Routes>
+      </BrowserRouter>
+    </div>
+  );
 }
 
 export default App;

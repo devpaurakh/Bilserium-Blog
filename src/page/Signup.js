@@ -1,19 +1,126 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import logo from "/Users/ace/Documents/Code/bisleriumblog/src/Assets/Images/logo.png";
 import illustration from "/Users/ace/Documents/Code/bisleriumblog/src/Assets/Images/illustration.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
+import { BASE_URL } from "../constants";
+
+
 
 export default function SignUp() {
+  const toLogin = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+  const [errors, setErrors] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    // Clear validation error message when the user starts typing
+    setErrors({ ...errors, [name]: "" });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    let newErrors = {};
+
+    // Validate username
+    if (formData.username.trim() === "") {
+      newErrors.username = "Username is required";
+    }
+
+    // Validate email
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+      newErrors.email = "Invalid email format";
+    }
+
+    // Validate password
+    if (formData.password.trim() === "") {
+      newErrors.password = "Password is required";
+    } else if (
+      !/(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!%*?&]).{8,}/.test(formData.password)
+    ) {
+      newErrors.password =
+        "Password must contain at least 1 uppercase letter, 1 number, 1 special character, and be at least 8 characters long";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+    } else {
+      // Your signup logic here
+      try {
+        const apiUrl = `${BASE_URL}api/authenticate/register`;
+        const response = await axios.post(apiUrl, formData);
+        console.log("Response:", response.data);
+
+        // Check if status is true or false
+        if (response.data.status) {
+          
+          toast.success(response.data.message, {
+            position: "top-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          })
+         
+          setTimeout(() => {
+            toLogin('/login')
+          }, 4000); 
+          
+        } else {
+          console.error("Error:", response.data.message);
+
+          toast.error(response.data.message, {
+            position: "top-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        }
+      } catch (error) {
+        if (error.response) {
+          // If there's a response object attached to the error
+          console.error("Error Response:", error.response.data);
+        } else {
+          // If there's no response object attached to the error
+          console.error("Error:", error.message);
+        }
+      }
+
+      // console.log("Signup form submitted:", formData);
+    }
   };
   return (
     <div className="flex h-screen">
       {/* <!-- Left Pane --> */}
-      <div class="hidden lg:flex items-center justify-center flex-1 bg-primaryColors text-black">
-        <div class="max-w-md text-center">
+      <div className="hidden lg:flex items-center justify-center flex-1 bg-primaryColors text-black">
+        <div className="max-w-md text-center">
           <img
             src={illustration}
             alt={"logo"}
@@ -40,11 +147,14 @@ export default function SignUp() {
             <div className="w-full lg:w-1/2 ml-0 lg:ml-2"></div>
           </div>
           <div className="mt-4 text-sm text-gray-600 text-center"></div>
-          <form action="#" method="POST" className="space-y-4">
-            {/* <!-- Your form elements go here --> */}
-            <div>
+
+          <form
+            onSubmit={handleSubmit}
+            className="w-full max-w-md p-6 bg-white rounded-lg shadow-md"
+          >
+            <div className="mb-4">
               <label
-                for="username"
+                htmlFor="username"
                 className="block text-sm font-medium text-gray-700"
               >
                 Username
@@ -52,29 +162,43 @@ export default function SignUp() {
               <input
                 type="text"
                 id="username"
-                placeholder="Create Your Username"
                 name="username"
-                className="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300"
+                value={formData.username}
+                onChange={handleChange}
+                placeholder="Enter Your Username"
+                className={`mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300 ${
+                  errors.username ? "border-red-500" : ""
+                }`}
               />
+              {errors.username && (
+                <p className="text-red-500 text-sm mt-1">{errors.username}</p>
+              )}
             </div>
-            <div>
+            <div className="mb-4">
               <label
-                for="email"
+                htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
                 Email
               </label>
               <input
-                type="text"
+                type="email"
                 id="email"
-                placeholder="Enter Your Email"
                 name="email"
-                className="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Enter Your Email"
+                className={`mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300 ${
+                  errors.email ? "border-red-500" : ""
+                }`}
               />
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+              )}
             </div>
-            <div>
+            <div className="mb-4">
               <label
-                for="password"
+                htmlFor="password"
                 className="block text-sm font-medium text-gray-700"
               >
                 Password
@@ -83,9 +207,13 @@ export default function SignUp() {
                 <input
                   type={showPassword ? "text" : "password"}
                   id="password"
-                  placeholder="Create Your Password"
                   name="password"
-                  className="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Create Your Password"
+                  className={`mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300 ${
+                    errors.password ? "border-red-500" : ""
+                  }`}
                 />
                 <button
                   type="button"
@@ -95,26 +223,31 @@ export default function SignUp() {
                   <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
                 </button>
               </div>
+              {errors.password && (
+                <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+              )}
             </div>
             <div>
               <button
                 type="submit"
-                className="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800 focus:outline-none focus:bg-black focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300"
+                className="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800 focus:outline-none
+            focus:bg-black focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300"
               >
-                Create an Account
+                Sign Up
               </button>
             </div>
           </form>
           <div className="mt-4 text-sm text-gray-600 text-center">
             <p>
               Already have an account? {/* I have Set Route for Login */}
-              <a href="./Login.js" className="text-black hover:underline">
+              <a href="/login" className="text-black hover:underline">
                 Login here
               </a>
             </p>
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }

@@ -1,21 +1,132 @@
 import React, { useState } from "react";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 import logo from "/Users/ace/Documents/Code/bisleriumblog/src/Assets/Images/logo.png";
 import illustration from "/Users/ace/Documents/Code/bisleriumblog/src/Assets/Images/illustration.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { BrowserRouter as Router} from "react-router-dom";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
+import { BASE_URL } from "../constants";
 export default function Login() {
+  const toLogin = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+  });
+  const [errors, setErrors] = useState({
+    username: "",
+    password: "",
+  });
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    // Clear validation error message when the user starts typing
+    setErrors({ ...errors, [name]: "" });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    let newErrors = {};
+
+    // Validate username
+    if (formData.username.trim() === "") {
+      newErrors.username = "Username is required";
+    }
+
+    // Validate password
+    if (formData.password.trim() === "") {
+      newErrors.password = "Password is required";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      // If there are errors, set them in the state
+      setErrors(newErrors);
+    } else {
+      // Your login logic here
+
+      try {
+        const apiUrl = `${BASE_URL}api/authenticate/login`;
+        const response = await axios.post(apiUrl, formData);
+
+        // Check if status is true or false
+        if (response.data.status) {
+          // Save the access token in cookies
+          Cookies.set("accessToken", response.data.accessToken, { expires: 7 });
+
+          //getting token from the cookies
+          const accessToken = Cookies.get("accessToken");
+
+          console.log("Access Token:", accessToken);
+
+          //lets decode it
+          const token = accessToken;
+
+          const decodedToken = jwtDecode(token);
+
+          const userId = decodedToken.id;
+          const userName = decodedToken.username;
+          const userEmail = decodedToken.email;
+          const userRole = decodedToken.role;
+
+          console.log("User ID:", userId);
+          console.log("User Name:", userName);
+          console.log("User Email:", userEmail);
+          console.log("User Email:", userRole);
+          
+
+          toast.success(response.data.message, {
+            position: "top-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+
+          setTimeout(() => {
+            toLogin("/home");
+          }, 4000);
+        } else {
+          console.error("Error:", response.data.message);
+
+          toast.error(response.data.message, {
+            position: "top-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        }
+      } catch (error) {
+        if (error.response) {
+          // If there's a response object attached to the error
+          console.error("Error Response:", error.response.data);
+        } else {
+          // If there's no response object attached to the error
+          console.error("Error:", error.message);
+        }
+      }
+    }
+  };
   return (
-    
-   <div className="flex h-screen">
+    <div className="flex h-screen">
       {/* <!-- Left Pane --> */}
-      <div class="hidden lg:flex items-center justify-center flex-1 bg-primaryColors text-black">
-        <div class="max-w-md text-center">
+      <div className="hidden lg:flex items-center justify-center flex-1 bg-primaryColors text-black">
+        <div className="max-w-md text-center">
           <img
             src={illustration}
             alt={"logo"}
@@ -42,34 +153,48 @@ export default function Login() {
             <div className="w-full lg:w-1/2 ml-0 lg:ml-2"></div>
           </div>
           <div className="mt-4 text-sm text-gray-600 text-center"></div>
-          <form action="#" method="POST" className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             {/* <!-- Your form elements go here --> */}
             <div>
               <label
-                for="username"
-                className="block text-sm font-medium text-gray-700">
+                htmlFor="username"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Username
               </label>
               <input
                 type="text"
-                id="email"
-                name="email"
+                id="username"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
                 placeholder="Enter Your username"
-                className="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300"/>
+                className={`mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300 ${
+                  errors.username ? "border-red-500" : ""
+                }`}
+              />
+              {errors.username && (
+                <p className="text-red-500 text-sm mt-1">{errors.username}</p>
+              )}
             </div>
             <div>
               <label
-                for="password"
-                className="block text-sm font-medium text-gray-700">
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Password
               </label>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
                   id="password"
-                  placeholder="Enter Your Password"
                   name="password"
-                  className="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Enter Your Password"
+                  className={`mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300 ${
+                    errors.password ? "border-red-500" : ""
+                  }`}
                 />
                 <button
                   type="button"
@@ -79,6 +204,9 @@ export default function Login() {
                   <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
                 </button>
               </div>
+              {errors.password && (
+                <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+              )}
             </div>
             <div>
               <button
@@ -92,14 +220,14 @@ export default function Login() {
           <div className="mt-4 text-sm text-gray-600 text-center">
             <p>
               Don't have an account? {/* I have Set Route for Login */}
-              {/* <a href="#" className="text-black hover:underline">
-                Login here
-              </a> */}
+              <a href="/signup" className="text-black hover:underline">
+                Signup here
+              </a>
             </p>
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
-  
   );
 }
