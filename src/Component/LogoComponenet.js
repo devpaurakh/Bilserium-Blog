@@ -4,6 +4,7 @@ export default function LogoComponenet() {
   return (
     <div className="logo w-20 h-20">
       <img src={LogoWhite} alt="logo" />
-    </div>
+    </div> 
+    //this will render the logo
   );
 }

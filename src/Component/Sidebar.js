@@ -33,15 +33,15 @@ export default function Sidebar() {
         });
         toHome("/home");
       }
-    });
+    }); // Show the confirmation dialog
 
     setTimeout(() => {
       window.location.reload();
     }, 2000);
-  };
+  }; // Function to handle logout
 
   // Check if access token exists in cookies
-  const isLoggedIn = document.cookie.includes("accessToken");
+  const isLoggedIn = document.cookie.includes("accessToken"); // Check if access token exists in cookies
 
   return (
     <div className="fixed flex left-0 flex-col h-80 bg-primaryColors text-black w-64 rounded-md mt-40">
@@ -51,7 +51,7 @@ export default function Sidebar() {
             <Link
               to="/home"
               className={`block py-2 px-4 rounded hover:bg-white hover:text-textColors transition duration-1000 ${
-                activeLink === "/home" ? "bg-white text-textColors" : ""
+                activeLink === "/home" ? "bg-white text-textColors" : "" // Check if the active link is home
               }`}
               onClick={() => setActiveLink("/home")}
             >
@@ -65,7 +65,9 @@ export default function Sidebar() {
               className={`block py-2 px-4 rounded hover:bg-white hover:text-textColors transition duration-1000 ${
                 activeLink === "/popular" ? "bg-white text-textColors" : ""
               }`}
-              onClick={() => setActiveLink("/popular")}
+              onClick={
+                () => setActiveLink("/popular") // Check if the active link is popular
+              }
             >
               <FontAwesomeIcon className="mr-5" icon={faBarChart} />
               Popular
@@ -75,6 +77,7 @@ export default function Sidebar() {
       </div>
       <div className="p-4 mt-auto">
         {isLoggedIn && (
+          // Check if user is logged in
           <button
             className="bg-red-500 text-white py-2 px-4 rounded w-full"
             onClick={handleLogout}

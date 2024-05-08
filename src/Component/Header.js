@@ -16,12 +16,13 @@ export default function Header() {
     const decodedToken = jwtDecode(token);
     userId = decodedToken.id;
     userName = decodedToken.username;
-  } catch (error) {
+  }  //this will catch any error that occurs during fetching user profile data
+  catch (error) {
     console.error("Error fetching user profile data:", error);
-  }
+  } // Get the user ID and username from the token
   const avatarUrl = `https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=${encodeURIComponent(
     userName
-  )}&rounded=true`;
+  )}&rounded=true`; // Generate the avatar URL using the username and profile avatar
   return (
     <header className="bg-primaryColors fixed top-0 mx-auto flex w-full items-center justify-between border-b p-2 shadow-md">
       <a href="/home">
@@ -34,7 +35,8 @@ export default function Header() {
           placeholder="Search"
           className="w-full px-4 py-2 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue"
         />
-      </div>
+      </div> 
+      {/* this will render the search bar */}
 
       {/* Conditional rendering based on access token */}
       {accessToken ? (
@@ -44,7 +46,7 @@ export default function Header() {
               Create +
             </button>{" "}
           </a>
-
+         {/* this will render the create button */}
           <a href="/profile">
             <button className="px-4 ml-10 py-2 bg-transprant text-black rounded-md ">
               <img src={avatarUrl} alt="" className="ml-10 w-12" />

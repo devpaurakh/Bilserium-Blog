@@ -7,6 +7,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../constants";
 
 export default function CreatePost() {
   const toHome = useNavigate();
@@ -61,7 +62,7 @@ export default function CreatePost() {
 
       // Send the request using Axios
       axios
-        .post("http://localhost:5142/api/blog/post", formData, {
+        .post(`${BASE_URL}/api/blog/post`, formData, { //
           headers: {
             "Content-Type": "multipart/form-data",
           },

@@ -68,7 +68,7 @@ export default function OwnPost() {
   //on the button click, delete the post
   const handleDelete = (blogId) => {
     axios
-      .delete(`${BASE_URL}/api/delete/blog/${blogId}?blogId=${blogId}`)
+      .delete(`${BASE_URL}/api/delete/blog/${blogId}?blogId=${blogId}`) //this the delete API with the blogId
       .then((response) => {
         console.log("Post deleted successfully:", response.data); // Log the response
         Swal.fire({
@@ -79,7 +79,8 @@ export default function OwnPost() {
           confirmButtonColor: "#3085d6",
           cancelButtonColor: "#d33",
           confirmButtonText: "Yes, delete it!",
-        }).then((result) => {
+        }) // Show the confirmation dialog
+        .then((result) => {
           if (result.isConfirmed) {
             Swal.fire("Deleted!", "Your post has been deleted.", "success"); // Show success message
             window.location.reload(); // Reload the page
@@ -92,23 +93,23 @@ export default function OwnPost() {
           icon: "error",
           title: "Oops...",
           text: "Something went wrong!",
-        });
+        }); // Log the error
       });
   }; // Handle the delete post
 
   return (
     <div>
-      {blogPosts.length > 0 ? (
-        blogPosts.map((blog) => (
+      {blogPosts.length > 0 ? ( // Check if there are blog posts
+        blogPosts.map((blog) => ( // Map through the blog posts
           <div
-            key={blog.blogId}
+            key={blog.blogId} // Set the key to the blog ID
             className="max-w-3xl mx-auto bg-cardColor shadow-md rounded-md p-4 mb-10 cursor-pointer"
           >
             <div className="flex items-center mb-2">
               <div className="rounded-full bg-gray-300 h-8 w-8">
                 <img
                   src={`https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=${encodeURIComponent(
-                    blog.userDTO.username
+                    blog.userDTO.username // Generate the avatar URL using the username
                   )}&rounded=true`}
                   alt=""
                   className=" w-12"
@@ -116,7 +117,10 @@ export default function OwnPost() {
               </div>
               <div className="ml-2 mt-1 flex items-center">
                 <p className="font-bold  text-gray-800">
-                  @{blog.userDTO.username}
+                  @{blog.userDTO.username
+                  
+                  // Render the username from the api response
+                  }
                 </p>
                 <p className="font-bold ml-2  text-gray-800">.</p>
                 <p className="text-sm/[3px] ml-2 text-gray-400 ">
@@ -138,6 +142,7 @@ export default function OwnPost() {
             <p className="text-gray-700 text-justify mb-4">{blog.content}</p>
             {/* Conditionally render the image */}
             {blog.imageUrl && (
+              // Check if there's an image URL
               <div className="overflow-hidden mb-4">
                 <img
                   src={`${BASE_URL}${blog.imageUrl}`}
@@ -162,13 +167,14 @@ export default function OwnPost() {
               </button>
             </div>
           </div>
-        ))
+        )) // this will map through the blog posts
       ) : (
         <div className="flex items-center justify-center">
         <img src={noFound} className="mx-auto" alt="" />
       </div>
       
-      )}
+      )} 
+      {/* // this will check if there are blog posts */}
     </div>
   );
 }

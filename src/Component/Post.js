@@ -12,8 +12,8 @@ import { BASE_URL } from "../constants";
 
 export default function Post({ blogPosts }) {
   // Function to calculate time duration from now
-  
-  const getTimeAgo = (createdTime) => {
+
+  const getTimeAgo = (createdTime) => { 
     const currentTime = new Date();
     const diff = currentTime - new Date(createdTime);
     const seconds = Math.floor(diff / 1000);
@@ -30,11 +30,11 @@ export default function Post({ blogPosts }) {
     } else {
       return `${seconds} second${seconds > 1 ? "s" : ""} ago`;
     }
-  };
+  }; // Function to calculate time duration from now
 
   return (
     <div>
-      {blogPosts.map((blog) => (
+      {blogPosts.map((blog) => ( // Map through the blogPosts array
         <div
           key={blog.blogId}
           className="max-w-3xl mx-auto bg-white shadow-md rounded-md p-4 mb-10 cursor-pointer"
@@ -49,7 +49,7 @@ export default function Post({ blogPosts }) {
                 className=" w-12"
               />
             </div>
-            <div className="ml-2 mt-1 flex items-center">
+            <div className="ml-2 mt-1 flex items-center"> 
               <p className="font-bold  text-gray-800">
                 @{blog.userDTO.username}
               </p>
@@ -93,8 +93,10 @@ export default function Post({ blogPosts }) {
       ))}
     </div>
   );
+
+//this compmnent will render the blog post with the user details and the post details
 }
 
 Post.propTypes = {
-  blogPosts: PropTypes.array.isRequired,
+  blogPosts: PropTypes.array.isRequired, // Prop validation for blogPosts
 };
