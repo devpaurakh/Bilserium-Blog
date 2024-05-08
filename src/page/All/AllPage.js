@@ -3,7 +3,6 @@ import React from 'react'
 import Header from '../../Component/Header'
 import Sidebar from '../../Component/Sidebar'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import Post from '../../Component/Post'
 
 export default function AllPage() {
   return (

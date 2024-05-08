@@ -35,10 +35,10 @@ export default function Homepage() {
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       setTimeout(() => {
-        setLoading(false);
         setCurrentPage(currentPage + 1);
-        window.scrollTo(0, 0); // Scroll to the top of the page
-      }, 1000);
+        window.scrollTo(0, 0); 
+        setLoading(false);// Scroll to the top of the page
+      }, 2000);
       setLoading(true);
     }
   };
@@ -46,10 +46,10 @@ export default function Homepage() {
   const handlePrevPage = () => {
     if (currentPage > 1) {
       setTimeout(() => {
-        setLoading(false);
         setCurrentPage(currentPage - 1);
-        window.scrollTo(0, 0); // Scroll to the top of the page
-      }, 1000);
+        window.scrollTo(0, 0);
+        setLoading(false); // Scroll to the top of the page
+      }, 2000);
 
       setLoading(true);
     }
