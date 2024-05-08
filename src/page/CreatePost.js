@@ -3,8 +3,13 @@ import Header from "../Component/Header";
 import Sidebar from "../Component/Sidebar";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 export default function CreatePost() {
+  const toHome = useNavigate();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
@@ -27,16 +32,75 @@ export default function CreatePost() {
 
   const handleSubmit = () => {
     if (isFormValid()) {
-      toast.success("Blog is Created Succesfully!", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      var userId;
+
+      try {
+        const accessToken = Cookies.get("accessToken");
+        const token = accessToken;
+        const decodedToken = jwtDecode(token);
+        userId = decodedToken.id;
+      } catch (error) {
+        console.error("Error fetching user profile data:", error);
+      }
+
+      // Construct the request body
+      const requestBody = {
+        Title: title,
+        Content: content,
+        UserId: userId,
+      };
+
+      // Create FormData object to append the image file if it exists
+      const formData = new FormData();
+      formData.append("Title", title);
+      formData.append("Content", content);
+      formData.append("UserId", userId);
+      if (selectedImage) {
+        formData.append("ImageFile", selectedImage);
+      }
+
+      // Send the request using Axios
+      axios
+        .post("http://localhost:5142/api/blog/post", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          if (response.data.status === true) {
+            toast.success(`${response.data.message}`, {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+
+            setTimeout(() => {
+              toHome("/home");
+            }, 3000);
+          } else {
+            toast.error(`${response.data.message}`, {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+
+          }
+        })
+        .catch((error) => {
+          // Handle errors
+          console.error("Error creating blog:", error);
+          toast.error("An error occurred. Please try again later.");
+        });
     } else {
       toast.error("Please fill out all fields!");
     }

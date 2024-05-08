@@ -17,7 +17,7 @@ export default function PopularPage() {
       </div>
     </div>
         <br />
-        <Post />
+       
       </div>
     </>
   )

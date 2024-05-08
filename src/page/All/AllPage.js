@@ -18,7 +18,7 @@ export default function AllPage() {
       </div>
     </div>
         <br />
-        <Post />
+       
       </div>
     </>
   )

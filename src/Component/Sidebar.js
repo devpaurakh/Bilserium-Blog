@@ -6,18 +6,39 @@ import { faHome } from "@fortawesome/free-solid-svg-icons/faHome";
 import { faSignOut } from "@fortawesome/free-solid-svg-icons/faSignOut";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "react-toastify/dist/ReactToastify.css";
-
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 export default function Sidebar() {
+  const toHome = useNavigate();
   const [activeLink, setActiveLink] = useState(window.location.pathname);
 
   // Function to handle logout
   const handleLogout = () => {
     // Remove all data from cookies
-    document.cookie.split(";").forEach((c) => {
-      document.cookie = c
-        .replace(/^ +/, "")
-        .replace(/=.*/, `=;expires=${new Date().toUTCString()};path=/`);
+    
+    
+    Swal.fire({
+      title: "Are you sure?",
+      text: "To logout from the application!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Logout!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        document.cookie.split(";").forEach((c) => {
+          document.cookie = c
+            .replace(/^ +/, "")
+            .replace(/=.*/, `=;expires=${new Date().toUTCString()};path=/`);
+        });
+        toHome("/home");
+      }
     });
+    
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000);
     
   };
 

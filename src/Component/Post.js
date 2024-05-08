@@ -1,3 +1,4 @@
+import React from "react";
 import {
   faHandPointDown,
   faHandPointUp,
@@ -6,15 +7,12 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import { faShare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import { BASE_URL } from "../constants";
-import axios from "axios";
 
-
-export default function Post() {
-  const [blogPosts, setBlogPosts] = useState([]);
-  
+export default function Post({ blogPosts }) {
   // Function to calculate time duration from now
+  
   const getTimeAgo = (createdTime) => {
     const currentTime = new Date();
     const diff = currentTime - new Date(createdTime);
@@ -34,27 +32,12 @@ export default function Post() {
     }
   };
 
-  useEffect(() => {
-    const fetchBlogData = async () => {
-      try {
-        const apiUrl = `${BASE_URL}api/all/blog?pageNumber=1&pageSize=10`;
-        const response = await axios.get(apiUrl);
-        const blogData = response.data.blogComment;
-        setBlogPosts(blogData);
-      } catch (error) {
-        console.error("Error fetching blog data:", error);
-      }
-    };
-
-    fetchBlogData();
-  }, []);
-
   return (
     <div>
       {blogPosts.map((blog) => (
         <div
           key={blog.blogId}
-          className="max-w-3xl mx-auto bg-cardColor shadow-md rounded-md p-4 mb-10 cursor-pointer"
+          className="max-w-3xl mx-auto bg-white shadow-md rounded-md p-4 mb-10 cursor-pointer"
         >
           <div className="flex items-center mb-2">
             <div className="rounded-full bg-gray-300 h-8 w-8">
@@ -85,7 +68,7 @@ export default function Post() {
           {blog.imageUrl && (
             <div className="overflow-hidden mb-4">
               <img 
-                src={`${BASE_URL}/${blog.imageUrl}`}
+                src={`${BASE_URL}${blog.imageUrl}`}
                 alt=""
                 className="w-full rounded-md"
               />
@@ -111,3 +94,7 @@ export default function Post() {
     </div>
   );
 }
+
+Post.propTypes = {
+  blogPosts: PropTypes.array.isRequired,
+};

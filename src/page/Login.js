@@ -11,7 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { BASE_URL } from "../constants";
 export default function Login() {
-  const toLogin = useNavigate();
+  const toHome = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
@@ -54,7 +54,7 @@ export default function Login() {
       // Your login logic here
 
       try {
-        const apiUrl = `${BASE_URL}api/authenticate/login`;
+        const apiUrl = `${BASE_URL}/api/authenticate/login`;
         const response = await axios.post(apiUrl, formData);
 
         // Check if status is true or false
@@ -95,7 +95,7 @@ export default function Login() {
           });
 
           setTimeout(() => {
-            toLogin("/home");
+            toHome("/home");
           }, 4000);
         } else {
           console.error("Error:", response.data.message);

@@ -4,9 +4,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primaryColors: "#E2E8F0",
+        primaryColors: "#E5E1DA",
         textColors: "#99BC85",
-        cardColor: "#EEEEEE",
+        cardColor: "#E5E1DA",
+        backgroundColor: "#FBF9F1",
       },
     },
   },

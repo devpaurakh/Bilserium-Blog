@@ -67,7 +67,7 @@ export default function SignUp() {
     } else {
       // Your signup logic here
       try {
-        const apiUrl = `${BASE_URL}api/authenticate/register`;
+        const apiUrl = `${BASE_URL}/api/authenticate/register`;
         const response = await axios.post(apiUrl, formData);
         console.log("Response:", response.data);
 
