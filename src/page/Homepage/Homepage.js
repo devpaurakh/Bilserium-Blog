@@ -37,8 +37,6 @@ export default function Homepage() {
   // Function to handle sorting by random
   const handleSortByRandom = () => {
     setTimeout(() => {
-      setCurrentPage(currentPage + 1);
-      window.scrollTo(0, 0);
       setSortBy("random");
       setLoading(false); // Scroll to the top of the page
     }, 2000);
@@ -48,13 +46,10 @@ export default function Homepage() {
   // Function to handle sorting by recency
   const handleSortByRecent = () => {
     setTimeout(() => {
-      setCurrentPage(currentPage + 1);
-      window.scrollTo(0, 0);
       setSortBy("recent");
       setLoading(false); // Scroll to the top of the page
     }, 2000);
     setLoading(true);
-    
   }; // Function to handle sorting by recency
 
   const handleNextPage = () => {

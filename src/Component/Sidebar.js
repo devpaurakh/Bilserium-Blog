@@ -15,8 +15,7 @@ export default function Sidebar() {
   // Function to handle logout
   const handleLogout = () => {
     // Remove all data from cookies
-    
-    
+
     Swal.fire({
       title: "Are you sure?",
       text: "To logout from the application!",
@@ -24,7 +23,7 @@ export default function Sidebar() {
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, Logout!"
+      confirmButtonText: "Yes, Logout!",
     }).then((result) => {
       if (result.isConfirmed) {
         document.cookie.split(";").forEach((c) => {
@@ -35,11 +34,10 @@ export default function Sidebar() {
         toHome("/home");
       }
     });
-    
+
     setTimeout(() => {
       window.location.reload();
     }, 2000);
-    
   };
 
   // Check if access token exists in cookies
@@ -52,8 +50,10 @@ export default function Sidebar() {
           <li className="mb-2">
             <Link
               to="/home"
-              className={`block py-2 px-4 rounded hover:bg-white hover:text-textColors transition duration-1000 ${activeLink === '/home' ? 'bg-white text-textColors' : ''}`}
-              onClick={() => setActiveLink('/home')}
+              className={`block py-2 px-4 rounded hover:bg-white hover:text-textColors transition duration-1000 ${
+                activeLink === "/home" ? "bg-white text-textColors" : ""
+              }`}
+              onClick={() => setActiveLink("/home")}
             >
               <FontAwesomeIcon className="mr-5" icon={faHome} />
               Home
@@ -62,28 +62,23 @@ export default function Sidebar() {
           <li className="mb-2">
             <Link
               to="/popular"
-              className={`block py-2 px-4 rounded hover:bg-white hover:text-textColors transition duration-1000 ${activeLink === '/popular' ? 'bg-white text-textColors' : ''}`}
-              onClick={() => setActiveLink('/popular')}
+              className={`block py-2 px-4 rounded hover:bg-white hover:text-textColors transition duration-1000 ${
+                activeLink === "/popular" ? "bg-white text-textColors" : ""
+              }`}
+              onClick={() => setActiveLink("/popular")}
             >
               <FontAwesomeIcon className="mr-5" icon={faBarChart} />
               Popular
-            </Link>
-          </li>
-          <li className="mb-2">
-            <Link
-              to="/all"
-              className={`block py-2 px-4 rounded hover:bg-white hover:text-textColors transition duration-1000 ${activeLink === '/all' ? 'bg-white text-textColors' : ''}`}
-              onClick={() => setActiveLink('/all')}
-            >
-              <FontAwesomeIcon className="mr-5" icon={faGlobe} />
-              All
             </Link>
           </li>
         </ul>
       </div>
       <div className="p-4 mt-auto">
         {isLoggedIn && (
-          <button className="bg-red-500 text-white py-2 px-4 rounded w-full" onClick={handleLogout}>
+          <button
+            className="bg-red-500 text-white py-2 px-4 rounded w-full"
+            onClick={handleLogout}
+          >
             <FontAwesomeIcon className="mr-5" icon={faSignOut} />
             Logout
           </button>
