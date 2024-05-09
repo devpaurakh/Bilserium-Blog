@@ -14,14 +14,14 @@ export default function Homepage() {
   const [loading, setLoading] = useState(true); // Set loading initially to true
   const [currentPage, setCurrentPage] = useState(1); // Current page number
   const [totalPages, setTotalPages] = useState(1); // Total number of pages
-  const [sortBy, setSortBy] = useState("random"); // Sort by random initially
+  const [sortBy, setSortBy] = useState("recency"); // Sort by random initially
 
   useEffect(() => {
     const fetchBlogData = async () => {
       try {
-        const apiUrl = `${BASE_URL}/api/all/blog/by/sorting?pageNumber=${currentPage}&pageSize=10&sortBy=${sortBy}`;
+        const apiUrl = `${BASE_URL}/api/all/blog/by/sorting?pageNumber=${currentPage}&pageSize=10&sortBy=${sortBy}`; // API URL
         const response = await axios.get(apiUrl);
-        const { blogComment, totalPages } = response.data;
+        const { blogComment, totalPages } = response.data; 
         setBlogPosts(blogComment);
         setTotalPages(totalPages);
         setLoading(false); // Set loading to false after data is fetched

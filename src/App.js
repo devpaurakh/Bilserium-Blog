@@ -8,6 +8,7 @@ import Signup from "./page/Signup";
 import NoInternetPage from "./page/NoInternetPage";
 import CreatePost from "./page/CreatePost";
 import ProfilePage from "./page/ProfilePage";
+import AdminPannel from "./Component/AdminPannel";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/create" element={<CreatePost />} />
+          <Route path="/admin" element={<AdminPannel />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="*" element={<NoInternetPage />} />
         </Routes>
