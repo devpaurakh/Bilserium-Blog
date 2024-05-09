@@ -47,6 +47,7 @@ namespace BisleriumBlog.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ImageUrl")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
@@ -76,6 +77,118 @@ namespace BisleriumBlog.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Blogs");
+                });
+
+            modelBuilder.Entity("BisleriumBlog.Domain.Entities.BlogHistory", b =>
+                {
+                    b.Property<int>("BlogHistoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BlogHistoryId"));
+
+                    b.Property<int?>("BlogId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModifiedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("ModifiedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("OldContent")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PopularBlog")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("BlogHistoryId");
+
+                    b.HasIndex("BlogId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("BlogHistory");
+                });
+
+            modelBuilder.Entity("BisleriumBlog.Domain.Entities.BlogVote", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("BlogId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("DownVote")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModifiedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("ModifiedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("OldVote")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UpVote")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BlogId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("BlogVote");
                 });
 
             modelBuilder.Entity("BisleriumBlog.Domain.Entities.Comment", b =>
@@ -129,6 +242,59 @@ namespace BisleriumBlog.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Comment");
+                });
+
+            modelBuilder.Entity("BisleriumBlog.Domain.Entities.CommentVote", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CommentId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("DownVote")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModifiedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("ModifiedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("OldVote")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UpVote")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommentId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CommentVote");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -357,6 +523,9 @@ namespace BisleriumBlog.Infrastructure.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
+                    b.Property<string>("ConnectionId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
@@ -385,16 +554,16 @@ namespace BisleriumBlog.Infrastructure.Migrations
                         {
                             Id = "02174cf0–9412–4cfe-afbf-59f706d72cf6",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "36f331fe-d35f-44f8-8f6b-7730eee36d8f",
+                            ConcurrencyStamp = "29b1f88e-0d47-444b-bb10-3c53dc261046",
                             Email = "admin@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAEGl33L2CJFNmsaTvT4tXqu16whENDi8KdSs40/k0fPacnEu0lUc+EdTYfWJ3ZlelmQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENqgCE67WfsvEmWG0NiM5BVdVF4h/s+IRAQ1zp8SsA4+oULuSMgkL9zXxTxO4GGiFA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c1da3109-fef9-42a6-b914-545570931e08",
+                            SecurityStamp = "e6310195-e17f-4858-babc-6db7aa039ccf",
                             TwoFactorEnabled = false,
                             UserName = "admin",
-                            CreatedTime = new DateTime(2024, 5, 5, 8, 52, 26, 67, DateTimeKind.Local).AddTicks(7128),
+                            CreatedTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false
                         });
                 });
@@ -404,6 +573,36 @@ namespace BisleriumBlog.Infrastructure.Migrations
                     b.HasOne("BisleriumBlog.Domain.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BisleriumBlog.Domain.Entities.BlogHistory", b =>
+                {
+                    b.HasOne("BisleriumBlog.Domain.Entities.Blog", "Blog")
+                        .WithMany()
+                        .HasForeignKey("BlogId");
+
+                    b.HasOne("BisleriumBlog.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Blog");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BisleriumBlog.Domain.Entities.BlogVote", b =>
+                {
+                    b.HasOne("BisleriumBlog.Domain.Entities.Blog", "Blog")
+                        .WithMany()
+                        .HasForeignKey("BlogId");
+
+                    b.HasOne("BisleriumBlog.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Blog");
 
                     b.Navigation("User");
                 });
@@ -419,6 +618,21 @@ namespace BisleriumBlog.Infrastructure.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("Blog");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BisleriumBlog.Domain.Entities.CommentVote", b =>
+                {
+                    b.HasOne("BisleriumBlog.Domain.Entities.Comment", "Comment")
+                        .WithMany()
+                        .HasForeignKey("CommentId");
+
+                    b.HasOne("BisleriumBlog.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Comment");
 
                     b.Navigation("User");
                 });

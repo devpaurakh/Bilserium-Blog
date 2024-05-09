@@ -1,11 +1,10 @@
-﻿using System.Windows.Input;
-using BisleriumBlog.Application.Common.Interface;
-using BisleriumBlog.Application.DTOs.CommentDTOs;
+﻿using BisleriumBlog.Application.DTOs.CommentDTOs;
 using BisleriumBlog.Application.DTOs.CommentDTOs.Update;
 using BisleriumBlog.Application.Interface.Repository;
+using BisleriumBlog.WebAPI.Helper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace BisleriumBlog.WebAPI.Controllers
 {
@@ -14,20 +13,41 @@ namespace BisleriumBlog.WebAPI.Controllers
     public class CommentController : ControllerBase
     {
         private readonly IComment _comment;
+        private readonly IHubContext<Notification> _Rhub;
 
-        public CommentController(IComment comment)
+        public CommentController(IComment comment, IHubContext<Notification> Rhub)
         {
             _comment = comment;
+            _Rhub = Rhub;
         }
 
         [HttpPost]
         [AllowAnonymous]
         [Route("/api/post/comment")]
-        public async Task<ResponseComments> PostComment(RequestCommentDTO model)
+        public async Task<IActionResult> PostComment(string connectionId, RequestCommentDTO model)
         {
             var result = await _comment.PostComment(model);
-            return result;
+            if (result.Status == true)
+            {
+                await _Rhub.Clients.Client(connectionId).SendAsync("The blogger can commented your post.");
+                return Ok(result);
+            }
+            return BadRequest(result);
         }
+
+        //[HttpPost]
+        //[AllowAnonymous]
+        //[Route("/api/post/comment")]
+        //public async Task<ResponseComments> PostComment(RequestCommentDTO model)
+        //{
+        //    var result = await _comment.PostComment(model);
+        //    if (result.Status == true)
+        //    {
+        //        await _Rhub.Clients.Users(model.UserId).SendAsync("Comment Added");
+
+        //    }
+        //    return result;
+        //}
 
         [HttpGet]
         [AllowAnonymous]

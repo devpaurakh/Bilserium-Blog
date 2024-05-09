@@ -1,5 +1,4 @@
-﻿using BisleriumBlog.Application.DTOs.BlogDTOs;
-using BisleriumBlog.Application.DTOs.CommentDTOs;
+﻿using BisleriumBlog.Application.DTOs.CommentDTOs;
 using BisleriumBlog.Application.DTOs.CommentDTOs.Update;
 using BisleriumBlog.Application.Interface.Repository;
 using BisleriumBlog.Domain.Entities;
@@ -28,19 +27,21 @@ namespace BisleriumBlog.Infrastructure.Services
                     BlogId = model.BlogId,
                     UserId = model.UserId,
                     CreatedBy = Guid.NewGuid(),
+                    CreatedTime = DateTime.Now,
                     IsDeleted = false
                 };
 
                 _context.Comment.Add(comment);
                 await _context.SaveChangesAsync();
 
-                var allComments = await _context.Comment.Where(c => c.BlogId == model.BlogId && !c.IsDeleted).ToListAsync();
+                // var userId = _context.Blogs.Where(blog => blog.BlogId = model.BlogId);
+                //var blogPostUserConnectionId = _context.Users.Where(user => user.Id = userId).Get(ConnectionId)
+                // There used the send notification function by user connection id
 
                 return new ResponseComments
                 {
                     Status = true,
-                    Message = "Comment posted successfully!",
-                    Data = allComments // Returning all comments for the specified blog
+                    Message = "Comment successfully!"
                 };
             }
             catch
@@ -48,8 +49,7 @@ namespace BisleriumBlog.Infrastructure.Services
                 return new ResponseComments
                 {
                     Status = false,
-                    Message = "Sorry, something went wrong on our end. Please try again later.",
-                    Data = null
+                    Message = "Sorry, something went wrong on our end. Please try again later."
                 };
             }
         }
@@ -64,8 +64,7 @@ namespace BisleriumBlog.Infrastructure.Services
                     return new ResponseComments
                     {
                         Status = false,
-                        Message = "Invalid Id",
-                        Data = null
+                        Message = "Invalid blog Id",
                     };
                 }
 
@@ -98,11 +97,12 @@ namespace BisleriumBlog.Infrastructure.Services
                 return new ResponseComments
                 {
                     Status = false,
-                    Message = $"Sorry, something went wrong on our end. Please try again later. {Id}",
+                    Message = $"Sorry, something went wrong on our end. Please try again later.",
                 };
             }
         }
 
+        // Delete comment
         public async Task<ResponseComments> DeleteComment(int commentId)
         {
             try
@@ -124,26 +124,23 @@ namespace BisleriumBlog.Infrastructure.Services
 
                 await _context.SaveChangesAsync();
 
-                var allBlogs = await _context.Blogs
-                                              .Where(b => !b.IsDeleted)
-                                              .ToListAsync();
-
                 return new ResponseComments
                 {
                     Status = true,
                     Message = "Comment is successfully Deleted!",
                 };
             }
-            catch (Exception ex)
+            catch
             {
                 return new ResponseComments
                 {
                     Status = false,
-                    Message = $"Sorry, something went wrong on our end. Please try again later. {ex.Message}",
+                    Message = $"Sorry, something went wrong on our end. Please try again later.",
                 };
             }
         }
 
+        // Update comment
         public async Task<ResponseComments> UpdateComment(int commentId, CommentUpdateRequest model)
         {
             try
@@ -167,7 +164,7 @@ namespace BisleriumBlog.Infrastructure.Services
                 commment.LastModifiedTime = DateTime.Now;
                 commment.ModifiedBy = Guid.NewGuid();
 
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(); // save comment in database
 
                 //var allBlogs = await _context.Comment
                 //                              .Where(b => !b.IsDeleted)
@@ -177,15 +174,14 @@ namespace BisleriumBlog.Infrastructure.Services
                 {
                     Status = true,
                     Message = "Comment is successfully updated!",
-                    Data = commment
                 };
             }
-            catch (Exception ex)
+            catch
             {
                 return new ResponseComments
                 {
                     Status = false,
-                    Message = $"Sorry, something went wrong on our end. Please try again later. {ex.Message}",
+                    Message = "Sorry, something went wrong on our end. Please try again later.",
                 };
             }
         }
