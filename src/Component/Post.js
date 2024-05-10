@@ -128,7 +128,7 @@ export default function Post({ blogPosts }) {
             >
               <FontAwesomeIcon icon={faHandPointUp} />
             </button>
-            <p className="py-1 px-1 rounded-full mr-2">20</p>
+            <p className="py-1 px-1 rounded-full mr-2">7</p>
             {/* Display upvote count */}
             <button
               className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-1 px-4 rounded-full mr-2"

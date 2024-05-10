@@ -18,6 +18,10 @@ export default function DetailPage() {
 
   const location = useLocation();
   const blogDetails = location.state ? location.state.blogDetails : null; // Get the blog details from the location state
+  console.log(
+    "Blog details:",
+    blogDetails?.blogDetails[0]?.commentDTOs[0]?.comments ?? ""
+  );
   const blogId =
     blogDetails && blogDetails.blogDetails.length > 0
       ? blogDetails.blogDetails[0].blogId
@@ -204,11 +208,32 @@ export default function DetailPage() {
                     key={`${blogIndex}-${commentIndex}`}
                     className="bg-white shadow-sm rounded-md p-4 mb-4"
                   >
-                    <p className="text-gray-800">
-                      {blogDetails && blogDetails.blogDetails.length > 0
-                        ? blogDetails.blogDetails[0].commentDTOs.comments
-                        : ""}
-                    </p>
+                    <div className="flex items-center">
+                      {/* Display user avatar */}
+                      <img
+                        src={`https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=${encodeURIComponent(
+                          comment.userDTO.username ?? "Unknown"
+                        )}&rounded=true`}
+                        alt=""
+                        className="w-6 rounded-full mr-2"
+                      />
+
+                      {/* Display username */}
+                      <p className="font-1sm text-gray-800">
+                        @{comment.userDTO.username ?? "Unknown"}
+                      </p>
+
+                      {/* Display timestamp */}
+                      <p className="font-xs ml-3 text-gray-400">
+                        {getTimeAgoAdjusted(comment.createdTime)}
+                      </p>
+                    </div>
+                    <br />
+
+                    {/* Display comment content */}
+                    <p className="text-gray-800">{comment.comments}</p>
+
+                    {/* Display upvotes and downvotes */}
                     <div className="flex items-center mt-2">
                       <span className="text-gray-600 mr-4 flex items-center">
                         <FontAwesomeIcon icon={faHandPointUp} />{" "}
