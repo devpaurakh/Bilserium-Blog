@@ -2,19 +2,21 @@ import React from "react";
 import {
   faHandPointDown,
   faHandPointUp,
-  faHeart,
   faMessage,
 } from "@fortawesome/free-regular-svg-icons";
-import { faShare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PropTypes from "prop-types";
 import { BASE_URL } from "../constants";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 export default function Post({ blogPosts }) {
+  const toDetailPage = useNavigate();
+  // const [blogUpVote, setBlogVote] = useState(null);
   var userId;
+
   // Function to calculate time duration from now
   const getTimeAgo = (createdTime) => {
     const currentTime = new Date();
@@ -39,6 +41,7 @@ export default function Post({ blogPosts }) {
     const adjustedTime = new Date(originalTime);
     adjustedTime.setHours(adjustedTime.getHours() + 5); // Add 5 hours
     adjustedTime.setMinutes(adjustedTime.getMinutes() + 45); // Add 45 minutes
+    adjustedTime.setSeconds(adjustedTime.getSeconds() + 4); // Add 4 seconds
     return getTimeAgo(adjustedTime);
   }
 
@@ -50,27 +53,31 @@ export default function Post({ blogPosts }) {
       userId = decodedToken.id;
 
       // Concurrently send POST and GET requests
-      const [postResponse, getResponse] = await Promise.all([
-       
+      const postResponse = await axios.post(
+        `${BASE_URL}/api/react/blog/vote/`,
+        {
+          VoteType: voteType,
+          BlogId: blogId,
+          UserId: userId,
+        }
+      );
 
-        axios.post(`http://localhost:5142/api/react/blog/vote`, {
-          voteType: voteType,
-          blogId: blogId,
-          userId: userId,
-        }),
-
-        axios.get(`${BASE_URL}/api/blog/vote?blogId=${blogId}`),
-      ]);
-
-      // Handle responses
-      console.log(getResponse.data.message); // Log the message
-      const voteCount = getResponse.data.message.split(" ")[3]; // Extract the vote count from the message
-      console.log(voteCount); // Log the vote count
-      console.log(postResponse); // Log the POST response
+      const totalUpVotes = postResponse.data.totalUpVotes;
+      console.log("Total upvotes:", totalUpVotes);
     } catch (error) {
       console.error("Error voting:", error);
     }
   };
+
+  const detailPage = async (blogId) => {
+    try {
+      const url = `http://localhost:5142/api/blog/${blogId}`;
+      const response = await axios.get(url); // Fetch blog details
+      toDetailPage("/detail", { state: { blogDetails: response.data }}) // Navigate to the detail page
+    } catch (error) {
+      console.error("Error fetching blog details:", error);
+    }
+  }; // Function to navigate to the detail page
 
   return (
     <div>
@@ -100,9 +107,6 @@ export default function Post({ blogPosts }) {
               <p className="text-sm/[3px] ml-2 text-gray-400 ">
                 {getTimeAgoAdjusted(blog.createdTime)}
               </p>
-              <button className="bg-gray-200 ml-3 hover:bg-textColors hover:text-white transition duration-700 text-gray-800 py-1 px-4 rounded-full">
-                <FontAwesomeIcon icon={faHeart} />
-              </button>
             </div>
           </div>
           <p className="text-lg font-semibold mb-2">{blog.title}</p>
@@ -124,7 +128,7 @@ export default function Post({ blogPosts }) {
             >
               <FontAwesomeIcon icon={faHandPointUp} />
             </button>
-            <p className="py-1 px-1 rounded-full mr-2">20</p>{" "}
+            <p className="py-1 px-1 rounded-full mr-2">20</p>
             {/* Display upvote count */}
             <button
               className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-1 px-4 rounded-full mr-2"
@@ -132,11 +136,11 @@ export default function Post({ blogPosts }) {
             >
               <FontAwesomeIcon icon={faHandPointDown} />
             </button>
-            <button className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-1 px-4 rounded-full mr-2">
+            <button
+              className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-1 px-4 rounded-full mr-2"
+              onClick={() => detailPage(blog.blogId)}
+            >
               <FontAwesomeIcon icon={faMessage} />
-            </button>
-            <button className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-1 px-4 rounded-full">
-              <FontAwesomeIcon icon={faShare} />
             </button>
           </div>
         </div>

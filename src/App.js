@@ -2,13 +2,13 @@ import "./App.css";
 import Homepage from "./page/Homepage/Homepage";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import PopularPage from "./page/PopularPage/PopularPage";
-import AllPage from "./page/All/AllPage";
 import Login from "./page/Login";
 import Signup from "./page/Signup";
 import NoInternetPage from "./page/NoInternetPage";
 import CreatePost from "./page/CreatePost";
 import ProfilePage from "./page/ProfilePage";
 import AdminPannel from "./Component/AdminPannel";
+import DetailPage from "./page/DetailPage";
 
 function App() {
   return (
@@ -18,7 +18,7 @@ function App() {
           <Route index element={<Homepage />} />
           <Route path="/home" element={<Homepage />} />
           <Route path="/popular" element={<PopularPage />} />
-          <Route path="/all" element={<AllPage />} />
+          <Route path="/detail" element={<DetailPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/create" element={<CreatePost />} />

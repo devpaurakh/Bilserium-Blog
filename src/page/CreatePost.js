@@ -57,7 +57,7 @@ export default function CreatePost() {
       formData.append("Content", content);
       formData.append("UserId", userId);
       if (selectedImage) {
-        formData.append("ImageFile", selectedImage);
+        formData.append("BlogImage", selectedImage);
       }
 
       // Send the request using Axios
