@@ -34,7 +34,7 @@ export default function DetailPage() {
     const minutes = Math.floor(seconds / 60); // Calculate the minutes
     const hours = Math.floor(minutes / 60); // Calculate the hours
     const days = Math.floor(hours / 24); // Calculate the days
-
+    
     if (days > 0) {
       return `${days} day${days > 1 ? "s" : ""} ago`;
     } else if (hours > 0) {

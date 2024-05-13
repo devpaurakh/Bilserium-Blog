@@ -19,7 +19,7 @@ export default function AdminHeader({OpenSidebar}) {
         </div>
 
       <div className="header-right">
-        <img className="icon"  src={avatarUrl} alt="Profile" />
+        <img className="icon" id="profile"  src={avatarUrl} alt="Profile" />
       </div>
     </header>
   );

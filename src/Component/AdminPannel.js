@@ -4,6 +4,7 @@ import AdminHeader from "./AdminHeader";
 import AdminSidebar from "./AdminSidebar";
 import AdminPage from "./AdminPage";
 export default function AdminPannel() {
+  
   const [openSidebarToggle, setOpenSidebarToggle] = useState(false);
 
   const OpenSidebar = () => {

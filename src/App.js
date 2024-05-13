@@ -9,6 +9,8 @@ import CreatePost from "./page/CreatePost";
 import ProfilePage from "./page/ProfilePage";
 import AdminPannel from "./Component/AdminPannel";
 import DetailPage from "./page/DetailPage";
+import AdminUserList from "./Component/AdminUserList";
+import AdminAllPost from "./Component/AdminAllPost";
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
           <Route index element={<Homepage />} />
           <Route path="/home" element={<Homepage />} />
           <Route path="/popular" element={<PopularPage />} />
+          <Route path="/adminUserlist" element={<AdminUserList />} />
+          <Route path="/adminAllPost" element={<AdminAllPost />} />
           <Route path="/detail" element={<DetailPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />

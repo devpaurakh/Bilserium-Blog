@@ -76,6 +76,7 @@ export default function Login() {
           const userName = decodedToken.username;
           const userEmail = decodedToken.email;
           const userRole = decodedToken.role;
+          
 
           console.log("User ID:", userId);
           console.log("User Name:", userName);
@@ -95,7 +96,11 @@ export default function Login() {
           });
 
           setTimeout(() => {
-            toHome("/home");
+            if (userRole === "SuperAdmin" || userRole === "Admin") {
+              toHome("/admin");
+          } else {
+              toHome("/home");
+          }
           }, 4000);
         } else {
           console.error("Error:", response.data.message);
