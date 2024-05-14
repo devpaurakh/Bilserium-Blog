@@ -8,8 +8,8 @@ import { BASE_URL } from "../constants";
 import LoaderAnimation from "./LoaderAnimation";
 
 export default function AdminUserList() {
-  const [openSidebarToggle, setOpenSidebarToggle] = useState(false);
   const [loading, setLoading] = useState(true); // Set loading initially to true
+  const [openSidebarToggle, setOpenSidebarToggle] = useState(false);
 
   const OpenSidebar = () => {
     setOpenSidebarToggle(!openSidebarToggle);
@@ -50,7 +50,7 @@ export default function AdminUserList() {
             setLoading(false);
             return { ...user, role: newRole };
           }
-          
+
           return user;
           // Set loading to false after data is fetched
         });

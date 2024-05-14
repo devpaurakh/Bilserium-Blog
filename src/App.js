@@ -11,6 +11,8 @@ import AdminPannel from "./Component/AdminPannel";
 import DetailPage from "./page/DetailPage";
 import AdminUserList from "./Component/AdminUserList";
 import AdminAllPost from "./Component/AdminAllPost";
+import AdminDetailPage from "./Component/AdminDetailPage";
+import ChanagePassword from "./Component/ChanagePassword";
 
 function App() {
   return (
@@ -19,10 +21,12 @@ function App() {
         <Routes>
           <Route index element={<Homepage />} />
           <Route path="/home" element={<Homepage />} />
+          <Route path="/chanagePassword" element={<ChanagePassword />} />
           <Route path="/popular" element={<PopularPage />} />
           <Route path="/adminUserlist" element={<AdminUserList />} />
           <Route path="/adminAllPost" element={<AdminAllPost />} />
           <Route path="/detail" element={<DetailPage />} />
+          <Route path="/adminPostDetail" element={<AdminDetailPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/create" element={<CreatePost />} />

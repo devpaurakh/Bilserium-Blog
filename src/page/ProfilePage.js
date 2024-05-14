@@ -7,8 +7,10 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import ClimbingBoxLoader from "react-spinners/ClimbingBoxLoader";
+import { useNavigate } from "react-router-dom";
 
 export default function ProfilePage() {
+  const toDetailPage = useNavigate();
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true); // Set loading initially to true
   var userId;
@@ -30,7 +32,7 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const apiUrl = `${BASE_URL}/api/user/profile?userId=${userId}`;
+        const apiUrl = `${BASE_URL}/api/user/profile/${userId}`;
         const response = await axios.get(apiUrl);
         setUserData(response.data);
         setLoading(false); // Set loading to false after data is fetched
@@ -49,6 +51,13 @@ export default function ProfilePage() {
 
     fetchUserData();
   }, [userId]);
+
+
+  function passwordChange() {
+
+    toDetailPage("/chanagePassword")
+    
+  }
 
   return (
     <>
@@ -76,8 +85,10 @@ export default function ProfilePage() {
               id="profile-background"
               className="bg-cover bg-center shadow-md rounded-lg overflow-hidden bg-white"
               style={{
-                backgroundImage: `url('https://source.unsplash.com/random')` || "Loading...",
-              }}>
+                backgroundImage:
+                  `url('https://source.unsplash.com/random')` || "Loading...",
+              }}
+            >
               <div className="p-8 ">
                 <div className="flex justify-center  ">
                   <img
@@ -97,7 +108,7 @@ export default function ProfilePage() {
                     Email: {userData?.userDetails?.email || "Unknown"}
                   </p>
 
-                  <button className="text-indigo-500 hover:text-indigo-700">
+                  <button onClick={passwordChange} className="text-indigo-500 hover:text-indigo-700">
                     Edit
                   </button>
                 </div>

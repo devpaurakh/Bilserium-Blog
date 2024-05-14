@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect,useState } from "react";
 import {
   faHandPointDown,
   faHandPointUp,
@@ -14,9 +14,9 @@ import { useNavigate } from "react-router-dom";
 
 export default function Post({ blogPosts }) {
   const toDetailPage = useNavigate();
-  // const [blogUpVote, setBlogVote] = useState(null);
+  const [blogData, setBlogData] = useState(null);
+  const accessToken = document.cookie.includes("accessToken");
   var userId;
-
   // Function to calculate time duration from now
   const getTimeAgo = (createdTime) => {
     const currentTime = new Date();
@@ -69,11 +69,29 @@ export default function Post({ blogPosts }) {
     }
   };
 
+  // useEffect(() => {
+  //   // Fetch blog data when the component mounts
+  //   const fetchBlogData = async (blogId) => {
+  //     try {
+  //       const apiUrl = `${BASE_URL}/api/blog/vote?blogId=${blogId}`; // API URL
+  //       const response = await axios.get(apiUrl);
+  //       // Get the blog data
+  //       setBlogData(response.data);
+  //     } catch (error) {
+  //       console.error("Error fetching blog data:", error);
+  //     }
+  //   };
+
+  //   // Call fetchBlogData with the blogId when the component mounts
+  //   fetchBlogData(blogId);
+  // }, []);
+
   const detailPage = async (blogId) => {
     try {
       const url = `http://localhost:5142/api/blog/${blogId}`;
       const response = await axios.get(url); // Fetch blog details
-      toDetailPage("/detail", { state: { blogDetails: response.data }}) // Navigate to the detail page
+      toDetailPage("/detail", { state: { blogDetails: response.data } });
+      // Navigate to the detail page
     } catch (error) {
       console.error("Error fetching blog details:", error);
     }
@@ -121,27 +139,33 @@ export default function Post({ blogPosts }) {
               />
             </div>
           )}
-          <div className="flex items-center">
-            <button
-              className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-1 px-4 rounded-full mr-2"
-              onClick={() => handleVote(true, blog.blogId)}
-            >
-              <FontAwesomeIcon icon={faHandPointUp} />
-            </button>
-            <p className="py-1 px-1 rounded-full mr-2">7</p>
-            {/* Display upvote count */}
-            <button
-              className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-1 px-4 rounded-full mr-2"
-              onClick={() => handleVote(false, blog.blogId)}
-            >
-              <FontAwesomeIcon icon={faHandPointDown} />
-            </button>
-            <button
-              className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-1 px-4 rounded-full mr-2"
-              onClick={() => detailPage(blog.blogId)}
-            >
-              <FontAwesomeIcon icon={faMessage} />
-            </button>
+          <div>
+            {accessToken ? ( // Check if accessToken is not empty
+              // Render your buttons when accessToken is present
+              <div className="flex items-center">
+                <button
+                  className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-1 px-4 rounded-full mr-2"
+                  onClick={() => handleVote(true, blog.blogId)}
+                >
+                  <FontAwesomeIcon icon={faHandPointUp} />
+                </button>
+                <p className="py-1 px-1 rounded-full mr-2">{blog.totalUpvotes}</p>
+                {/* Display upvote count */}
+                <button
+                  className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-1 px-4 rounded-full mr-2"
+                  onClick={() => handleVote(false, blog.blogId)}
+                >
+                  <FontAwesomeIcon icon={faHandPointDown} />
+                </button>
+                <button
+                  className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-1 px-4 rounded-full mr-2"
+                  onClick={() => detailPage(blog.blogId)}
+                >
+                  <FontAwesomeIcon icon={faMessage} />
+                </button>
+              </div>
+            ) : // Render nothing when accessToken is empty
+            null}
           </div>
         </div>
       ))}

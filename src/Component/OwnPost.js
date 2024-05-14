@@ -158,7 +158,6 @@ export default function OwnPost() {
                 <button className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-1 px-4 rounded-full mr-2">
                   <FontAwesomeIcon icon={faMessage} />
                 </button>
-              
               </div>
             </div>
           )

@@ -21,7 +21,7 @@ export default function Homepage() {
       try {
         const apiUrl = `${BASE_URL}/api/all/blog/by/sorting?pageNumber=${currentPage}&pageSize=10&sortBy=${sortBy}`; // API URL
         const response = await axios.get(apiUrl);
-        const { blogs, totalPages } = response.data; 
+        const { blogs, totalPages } = response.data;
         setBlogPosts(blogs);
         setTotalPages(totalPages);
         setLoading(false); // Set loading to false after data is fetched
@@ -33,8 +33,6 @@ export default function Homepage() {
 
     fetchBlogData();
   }, [currentPage, sortBy]); // Fetch data when currentPage changes
-
-  
 
   // Function to handle sorting by random
   const handleSortByRandom = () => {
@@ -143,7 +141,6 @@ export default function Homepage() {
               </button>
             </div>
           </div>
-        
         </div>
       )}
     </>
